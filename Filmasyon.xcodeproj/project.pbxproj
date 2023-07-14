@@ -16,6 +16,7 @@
 		34A5ED8E2A61B1D5006F6080 /* DashboardBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A5ED8D2A61B1D5006F6080 /* DashboardBuilder.swift */; };
 		34A5ED902A61B1FA006F6080 /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A5ED8F2A61B1FA006F6080 /* DashboardViewController.swift */; };
 		34A5ED922A61B24E006F6080 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A5ED912A61B24E006F6080 /* DashboardViewModel.swift */; };
+		34A5ED952A61B76A006F6080 /* MovieTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A5ED942A61B76A006F6080 /* MovieTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		34A5ED8D2A61B1D5006F6080 /* DashboardBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardBuilder.swift; sourceTree = "<group>"; };
 		34A5ED8F2A61B1FA006F6080 /* DashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewController.swift; sourceTree = "<group>"; };
 		34A5ED912A61B24E006F6080 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
+		34A5ED942A61B76A006F6080 /* MovieTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 		34A5ED8B2A61AEF3006F6080 /* Dashboard */ = {
 			isa = PBXGroup;
 			children = (
+				34A5ED932A61B72E006F6080 /* View */,
 				34A5ED8D2A61B1D5006F6080 /* DashboardBuilder.swift */,
 				34A5ED8F2A61B1FA006F6080 /* DashboardViewController.swift */,
 				34A5ED912A61B24E006F6080 /* DashboardViewModel.swift */,
@@ -130,6 +133,14 @@
 			children = (
 			);
 			path = Detail;
+			sourceTree = "<group>";
+		};
+		34A5ED932A61B72E006F6080 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				34A5ED942A61B76A006F6080 /* MovieTableViewCell.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -208,6 +219,7 @@
 				34A5ED842A61AE40006F6080 /* AppContainer.swift in Sources */,
 				34A5ED6F2A61ACB0006F6080 /* AppDelegate.swift in Sources */,
 				34A5ED862A61AE5A006F6080 /* AppRouter.swift in Sources */,
+				34A5ED952A61B76A006F6080 /* MovieTableViewCell.swift in Sources */,
 				34A5ED922A61B24E006F6080 /* DashboardViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

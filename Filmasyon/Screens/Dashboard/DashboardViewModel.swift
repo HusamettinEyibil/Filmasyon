@@ -15,6 +15,9 @@ class DashboardViewModel {
     
     weak var delegate: DashboardViewModelDelegate?
     
+    func viewDidLoad() {
+        
+    }
 }
 
 //MARK: View Controller Protocol Methods
