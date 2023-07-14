@@ -15,6 +15,8 @@ protocol DashboardViewModelProtocol: AnyObject {
 class DashboardViewController: UIViewController {
     
     private var tableView = UITableView()
+    
+    private var models: [MovieModel] = []
         
     var viewModel: DashboardViewModelProtocol! {
         didSet {
@@ -58,7 +60,10 @@ class DashboardViewController: UIViewController {
 
 //MARK: View Model Delegate Methods
 extension DashboardViewController: DashboardViewModelDelegate {
-    
+    func didFetchMovies(_ output: [MovieModel]) {
+        models = output
+        tableView.reloadData()
+    }
 }
 
 //MARK: Table View Data Source Methods
