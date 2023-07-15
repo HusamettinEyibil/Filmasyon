@@ -10,6 +10,7 @@ import UIKit
 protocol DashboardViewModelProtocol: AnyObject {
     var delegate: DashboardViewModelDelegate? { get set }
     func viewDidLoad()
+    func downloadImage(with urlString: String, imdbId: String, completion: ((Data?, Error?) -> Void)?)
 }
 
 class DashboardViewController: UIViewController {
@@ -62,19 +63,35 @@ class DashboardViewController: UIViewController {
 extension DashboardViewController: DashboardViewModelDelegate {
     func didFetchMovies(_ output: [MovieModel]) {
         models = output
-        tableView.reloadData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 }
 
 //MARK: Table View Data Source Methods
 extension DashboardViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return models.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        cell.textLabel?.text = "Movie \(indexPath.row + 1)"
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.identifier, for: indexPath) as? MovieTableViewCell else {
+            preconditionFailure("Cell identifier could not be found.")
+        }
+        let movie = models[indexPath.row]
+        cell.configureCell(with: movie)
+        if let imageUrl = movie.posterUrl, let id = movie.imdbId {
+            viewModel.downloadImage(with: imageUrl, imdbId: id) { data, error in
+                if let data {
+                    DispatchQueue.main.async {
+                        cell.setImage(with: data)
+                    }
+                } else if let error {
+                    debugPrint(error.localizedDescription)
+                }
+            }
+        }
         return cell
     }
 }

@@ -25,7 +25,7 @@ struct MovieModel: Decodable {
     var posterUrl: String?
     
     enum CodingKeys: String, CodingKey {
-        case title
+        case title = "Title"
         case year = "Year"
         case imdbId = "imdbID"
         case type

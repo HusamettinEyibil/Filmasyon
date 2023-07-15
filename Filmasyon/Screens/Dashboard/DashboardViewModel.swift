@@ -22,7 +22,8 @@ class DashboardViewModel {
     weak var delegate: DashboardViewModelDelegate?
 
     func searchMovies(with searchKey: String) {
-        manager.searchMovies(with: searchKey) { result in
+        manager.searchMovies(with: searchKey) { [weak self] result in
+            guard let self else { return }
             switch result {
             case let .success(models):
                 self.delegate?.didFetchMovies(models)
@@ -31,11 +32,29 @@ class DashboardViewModel {
             }
         }
     }
+    
+    
 }
 
 //MARK: View Controller Protocol Methods
 extension DashboardViewModel: DashboardViewModelProtocol {
     func viewDidLoad() {
         searchMovies(with: "star")
+    }
+    
+    func downloadImage(with urlString: String, imdbId: String, completion: ((Data?, Error?) -> Void)?) {
+        if let data = appContainer.sessionManager.cachedImages[imdbId] {
+            completion?(data, nil)
+        } else {
+            manager.downloadImage(with: urlString) { result in
+                switch result {
+                case let .success(data):
+                    appContainer.sessionManager.cachedImages[imdbId] = data
+                    completion?(data, nil)
+                case let .failure(error):
+                    completion?(nil, error)
+                }
+            }
+        }
     }
 }

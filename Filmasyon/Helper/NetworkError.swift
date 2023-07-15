@@ -11,4 +11,5 @@ enum NetworkError: Error {
     case invalidURL
     case failedToGetMovies
     case failedToDecodeData
+    case failedToDownloadImage
 }

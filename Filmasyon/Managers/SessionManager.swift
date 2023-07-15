@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+class SessionManager {
+    var cachedImages: [String: Data] = [:]
+}
