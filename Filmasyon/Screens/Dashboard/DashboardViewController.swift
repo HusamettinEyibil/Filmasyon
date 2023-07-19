@@ -16,6 +16,7 @@ protocol DashboardViewModelProtocol: AnyObject {
 
 class DashboardViewController: BaseViewController {
     
+    private var searchBar = UISearchBar()
     private var tableView = UITableView()
     
     private var models: [MovieModel] = []
@@ -33,12 +34,25 @@ class DashboardViewController: BaseViewController {
         title = "Movies"
         fetchMovies()
         configureTableView()
+        configureSearchBar()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        tableView.frame = view.safeAreaLayoutGuide.layoutFrame
+        let safeArea = view.safeAreaLayoutGuide
+        
+        view.addSubview(searchBar)
+        searchBar.topAnchor.constraint(equalTo: safeArea.topAnchor).isActive = true
+        searchBar.leftAnchor.constraint(equalTo: safeArea.leftAnchor, constant: 20).isActive = true
+        searchBar.rightAnchor.constraint(equalTo: safeArea.rightAnchor, constant: -20).isActive = true
+        searchBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        view.addSubview(tableView)
+        tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 10).isActive = true
+        tableView.leftAnchor.constraint(equalTo: safeArea.leftAnchor, constant: 20).isActive = true
+        tableView.rightAnchor.constraint(equalTo: safeArea.rightAnchor, constant: -20).isActive = true
+        tableView.heightAnchor.constraint(equalToConstant: 400).isActive = true
         tableView.reloadData()
     }
     
@@ -69,6 +83,7 @@ class DashboardViewController: BaseViewController {
     }
     
     private func configureTableView() {
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
         tableView.showsVerticalScrollIndicator = false
@@ -77,7 +92,17 @@ class DashboardViewController: BaseViewController {
         tableView.estimatedRowHeight = tableView.rowHeight
         tableView.rowHeight = UITableView.automaticDimension
         tableView.register(MovieTableViewCell.self, forCellReuseIdentifier: MovieTableViewCell.identifier)
-        view.addSubview(tableView)
+    }
+    
+    func configureSearchBar() {
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.delegate = self
+        searchBar.searchBarStyle = .minimal
+        searchBar.returnKeyType = .search
+    }
+    
+    func endEditing() {
+        view.endEditing(true)
     }
     
 }
@@ -129,6 +154,12 @@ extension DashboardViewController: UITableViewDataSource {
 extension DashboardViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        endEditing()
         viewModel.didSelectRow(at: indexPath)
     }
+}
+
+//MARK: Search Bar Delegate Methods
+extension DashboardViewController: UISearchBarDelegate {
+    
 }
