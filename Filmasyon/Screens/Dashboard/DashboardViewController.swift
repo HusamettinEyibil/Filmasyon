@@ -169,12 +169,12 @@ class DashboardViewController: BaseViewController {
         searchBar.delegate = self
         searchBar.searchBarStyle = .minimal
         searchBar.returnKeyType = .search
+        searchBar.addDoneButtonToKeyboard(target: self, selector: #selector(endEditing))
     }
     
     func configureCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-//        layout.minimumLineSpacing = 5
         layout.minimumInteritemSpacing = 10
         
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -236,8 +236,6 @@ extension DashboardViewController: UITableViewDataSource {
         }
     }
 }
-
-
 
 //MARK: Table View Delegate Methods
 extension DashboardViewController: UITableViewDelegate{

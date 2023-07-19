@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3470460C2A67E30700F536E0 /* MovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470460B2A67E30700F536E0 /* MovieCollectionViewCell.swift */; };
+		3470460E2A6825B200F536E0 /* UISearchBar+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470460D2A6825B200F536E0 /* UISearchBar+.swift */; };
 		34A5ED6F2A61ACB0006F6080 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A5ED6E2A61ACB0006F6080 /* AppDelegate.swift */; };
 		34A5ED732A61ACB0006F6080 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A5ED722A61ACB0006F6080 /* ViewController.swift */; };
 		34A5ED782A61ACB1006F6080 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34A5ED772A61ACB1006F6080 /* Assets.xcassets */; };
@@ -33,6 +34,7 @@
 
 /* Begin PBXFileReference section */
 		3470460B2A67E30700F536E0 /* MovieCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewCell.swift; sourceTree = "<group>"; };
+		3470460D2A6825B200F536E0 /* UISearchBar+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchBar+.swift"; sourceTree = "<group>"; };
 		34A5ED6B2A61ACB0006F6080 /* Filmasyon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Filmasyon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34A5ED6E2A61ACB0006F6080 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		34A5ED722A61ACB0006F6080 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				34A5EDA32A6291EC006F6080 /* UIView+.swift */,
+				3470460D2A6825B200F536E0 /* UISearchBar+.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -276,6 +279,7 @@
 				34A5ED862A61AE5A006F6080 /* AppRouter.swift in Sources */,
 				34A5ED952A61B76A006F6080 /* MovieTableViewCell.swift in Sources */,
 				34A5ED922A61B24E006F6080 /* DashboardViewModel.swift in Sources */,
+				3470460E2A6825B200F536E0 /* UISearchBar+.swift in Sources */,
 				34A5ED992A61F69C006F6080 /* CustomError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
