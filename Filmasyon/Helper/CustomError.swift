@@ -13,3 +13,7 @@ enum NetworkError: Error {
     case failedToDecodeData
     case failedToDownloadImage
 }
+
+enum SessionError: Error {
+    case failedToGetCachedImage
+}

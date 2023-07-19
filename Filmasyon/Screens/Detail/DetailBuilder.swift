@@ -8,9 +8,9 @@
 import Foundation
 
 class DetailBuilder {
-    static func build() -> DetailViewController {
+    static func build(movie: MovieModel) -> DetailViewController {
         let viewController = DetailViewController()
-        viewController.viewModel = DetailViewModel()
+        viewController.viewModel = DetailViewModel(movie: movie)
         return viewController
     }
 }

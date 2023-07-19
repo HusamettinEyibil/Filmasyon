@@ -15,6 +15,7 @@ class MovieTableViewCell: UITableViewCell {
         let view = UIView()
         view.corner(3)
         view.border(.lightGray, 1)
+        view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -30,6 +31,7 @@ class MovieTableViewCell: UITableViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        label.textColor = .black
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -38,6 +40,7 @@ class MovieTableViewCell: UITableViewCell {
     private let yearLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -77,6 +80,8 @@ class MovieTableViewCell: UITableViewCell {
     }
     
     func configureCell(with movie: MovieModel) {
+        selectionStyle = .none
+        backgroundColor = .white
         titleLabel.text = movie.title
         yearLabel.text = "Release Date: \(movie.year ?? "")"
     }
