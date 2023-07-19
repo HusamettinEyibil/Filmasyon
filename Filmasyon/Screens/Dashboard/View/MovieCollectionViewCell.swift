@@ -31,6 +31,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
         label.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
         label.textColor = .black
         label.numberOfLines = 0
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -39,6 +40,8 @@ class MovieCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         label.textColor = .black
+        label.numberOfLines = 0
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -71,8 +74,8 @@ class MovieCollectionViewCell: UICollectionViewCell {
         containerView.addSubview(yearLabel)
         yearLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10).isActive = true
         yearLabel.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 10).isActive = true
-        yearLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10).isActive = true
-        yearLabel.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor, constant: -10).isActive = true
+        yearLabel.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor, constant: -10).isActive = true
+        yearLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -10).isActive = true
     }
     
     func configureCell(with movie: MovieModel) {

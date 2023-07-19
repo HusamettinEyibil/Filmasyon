@@ -49,6 +49,11 @@ extension DashboardViewModel: DashboardViewModelProtocol {
         delegate?.showDetail(for: movie)
     }
     
+    func didSelectItem(at indexPath: IndexPath) {
+        let movie = models[indexPath.row]
+        delegate?.showDetail(for: movie)
+    }
+    
     func searchMovies(completion: @escaping (Result<([MovieModel], Int?), NetworkError>) -> Void) {
         manager.searchMovies(with: searchKey) { [weak self] result in
             guard let self else { return }
@@ -60,5 +65,9 @@ extension DashboardViewModel: DashboardViewModelProtocol {
                 completion(.failure(error))
             }
         }
+    }
+    
+    func setSearchKey(with key: String) {
+        self.searchKey = key
     }
 }
