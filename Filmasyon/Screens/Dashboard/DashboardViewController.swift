@@ -33,6 +33,9 @@ class DashboardViewController: BaseViewController {
     private var totalResultsForTable = 0
     private var totalResultsForCollection = 0
     private var searchText = "star"
+    
+    var searching = false
+    var searchWorkItem: DispatchWorkItem?
         
     var viewModel: DashboardViewModelProtocol! {
         didSet {
@@ -81,12 +84,24 @@ class DashboardViewController: BaseViewController {
         collectionView.rightAnchor.constraint(equalTo: safeArea.rightAnchor, constant: -20).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor).isActive = true
         collectionView.heightAnchor.constraint(equalToConstant: 220).isActive = true
+        
+        if let container = indicatorContainer {
+            view.bringSubviewToFront(container)
+        }
     }
     
     func fetchMovies(with searchKey: String, type: SearchType, isNewSearch: Bool = false) {
         viewModel.setSearchKey(with: searchKey)
+        searching = true
+        showLoading()
+        tableView.isScrollEnabled = false
         viewModel.searchMovies(type: type, isNewSearch: isNewSearch) { [weak self] result in
             guard let self else { return }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.searching = false
+                self.hideLoading()
+                self.tableView.isScrollEnabled = true
+            }
             switch result {
             case let .success(response):
                 let movies = response.0
@@ -115,7 +130,9 @@ class DashboardViewController: BaseViewController {
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+                if isNewSearch {
+                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+                }
             }
         case .CollectionView:
             if isNewSearch {
@@ -138,7 +155,8 @@ class DashboardViewController: BaseViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.corner(5)
-        tableView.showsVerticalScrollIndicator = false
+        tableView.showsVerticalScrollIndicator = true
+        tableView.scrollsToTop = true
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
         tableView.estimatedRowHeight = tableView.rowHeight
@@ -169,7 +187,7 @@ class DashboardViewController: BaseViewController {
         collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
     }
     
-    func endEditing() {
+    @objc func endEditing() {
         view.endEditing(true)
     }
     
@@ -207,16 +225,19 @@ extension DashboardViewController: UITableViewDataSource {
                 }
             }
         }
-        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableModels.count - 1 {
             if totalResultsForTable > tableModels.count {
                 fetchMovies(with: searchText, type: .TableView)
             }
         }
-        
-        return cell
     }
 }
+
+
 
 //MARK: Table View Delegate Methods
 extension DashboardViewController: UITableViewDelegate{
@@ -224,16 +245,6 @@ extension DashboardViewController: UITableViewDelegate{
         tableView.deselectRow(at: indexPath, animated: true)
         endEditing()
         viewModel.didSelectRow(at: indexPath)
-    }
-}
-
-//MARK: Search Bar Delegate Methods
-extension DashboardViewController: UISearchBarDelegate {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        if let key = searchBar.text {
-            searchText = key
-            fetchMovies(with: key, type: .TableView, isNewSearch: true)
-        }
     }
 }
 
@@ -284,5 +295,35 @@ extension DashboardViewController: UICollectionViewDelegate {
 extension DashboardViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 170, height: collectionView.frame.size.height)
+    }
+}
+
+//MARK: Search Bar Delegate Methods
+extension DashboardViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if let key = searchBar.text {
+            searchText = key
+            fetchMovies(with: key, type: .TableView, isNewSearch: true)
+        }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.searchText = searchText
+        performSearch()
+    }
+    
+    func performSearch() {
+        guard !searching else { return }
+        guard searchText.count > 2 else { return }
+        
+        if self.searchWorkItem != nil {
+            self.searchWorkItem?.cancel()
+            self.searchWorkItem = nil
+        }
+        self.searchWorkItem = DispatchWorkItem {
+            self.fetchMovies(with: self.searchText, type: .TableView, isNewSearch: true)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5, execute: self.searchWorkItem!)
     }
 }

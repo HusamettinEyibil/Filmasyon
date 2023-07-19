@@ -19,14 +19,15 @@ class BaseViewController: UIViewController {
     
     func showLoading() {
         self.indicator = UIActivityIndicatorView(style: .whiteLarge)
-        self.indicatorContainer = UIView(frame: self.view.bounds)
+        self.indicatorContainer = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width/3, height: view.bounds.height/5))
+        self.indicatorContainer?.center = view.center
+        self.indicatorContainer?.corner(10)
         indicator?.frame = self.indicatorContainer!.bounds
         indicatorContainer?.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         indicatorContainer?.addSubview(self.indicator!)
         indicator?.startAnimating()
-        self.indicatorContainer?.frame = view.bounds
-        self.indicator?.frame = self.indicatorContainer!.bounds
         view.addSubview(indicatorContainer!)
+        view.bringSubviewToFront(indicatorContainer!)
     }
     
     func hideLoading() {
