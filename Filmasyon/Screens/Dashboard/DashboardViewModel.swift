@@ -18,7 +18,8 @@ class DashboardViewModel {
     }
     
     private let manager: NetworkProtocol!
-    private var models: [MovieModel] = []
+    private var tableModels: [MovieModel] = []
+    private var collectionModels: [MovieModel] = []
     private var searchKey = "star"
     
     weak var delegate: DashboardViewModelDelegate?
@@ -45,24 +46,41 @@ extension DashboardViewModel: DashboardViewModelProtocol {
     }
     
     func didSelectRow(at indexPath: IndexPath) {
-        let movie = models[indexPath.row]
+        let movie = tableModels[indexPath.row]
         delegate?.showDetail(for: movie)
     }
     
     func didSelectItem(at indexPath: IndexPath) {
-        let movie = models[indexPath.row]
+        let movie = collectionModels[indexPath.row]
         delegate?.showDetail(for: movie)
     }
     
-    func searchMovies(completion: @escaping (Result<([MovieModel], Int?), NetworkError>) -> Void) {
+    func searchMovies(type: SearchType, isNewSearch: Bool, completion: @escaping (Result<([MovieModel], Int?), NetworkError>) -> Void) {
         manager.searchMovies(with: searchKey) { [weak self] result in
             guard let self else { return }
             switch result {
             case let .success(response):
-                self.models.append(contentsOf: response.0)
+                self.handleResponse(movies: response.0, type: type, isNewSearch: isNewSearch)
                 completion(.success(response))
             case let .failure(error):
                 completion(.failure(error))
+            }
+        }
+    }
+    
+    func handleResponse(movies: [MovieModel], type: SearchType, isNewSearch: Bool) {
+        switch type {
+        case .TableView:
+            if isNewSearch {
+                tableModels = movies
+            } else {
+                tableModels.append(contentsOf: movies)
+            }
+        case .CollectionView:
+            if isNewSearch {
+                collectionModels = movies
+            } else {
+                collectionModels.append(contentsOf: movies)
             }
         }
     }

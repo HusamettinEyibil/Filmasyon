@@ -36,5 +36,12 @@ class BaseViewController: UIViewController {
         self.indicator = nil
         self.indicatorContainer = nil
     }
+    
+    func showAlert(with message: String) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default)
+        alert.addAction(action)
+        present(alert, animated: true)
+    }
 
 }

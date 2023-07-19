@@ -14,7 +14,7 @@ enum SearchType {
 
 protocol DashboardViewModelProtocol: AnyObject {
     var delegate: DashboardViewModelDelegate? { get set }
-    func searchMovies(completion: @escaping (Result<([MovieModel], Int?), NetworkError>) -> Void)
+    func searchMovies(type: SearchType, isNewSearch: Bool, completion: @escaping (Result<([MovieModel], Int?), NetworkError>) -> Void)
     func didSelectRow(at indexPath: IndexPath)
     func didSelectItem(at indexPath: IndexPath)
     func setSearchKey(with key: String)
@@ -32,6 +32,7 @@ class DashboardViewController: BaseViewController {
     private var collectionModels: [MovieModel] = []
     private var totalResultsForTable = 0
     private var totalResultsForCollection = 0
+    private var searchText = "star"
         
     var viewModel: DashboardViewModelProtocol! {
         didSet {
@@ -43,7 +44,7 @@ class DashboardViewController: BaseViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Movies"
-        fetchMovies(with: "star", type: .TableView)
+        fetchMovies(with: searchText, type: .TableView, isNewSearch: true)
         fetchMovies(with: "Comedy", type: .CollectionView)
         configureTableView()
         configureSearchBar()
@@ -82,19 +83,14 @@ class DashboardViewController: BaseViewController {
         collectionView.heightAnchor.constraint(equalToConstant: 220).isActive = true
     }
     
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        viewModel.viewDidLoad()
-//    }
-    
-    func fetchMovies(with searchKey: String, type: SearchType) {
+    func fetchMovies(with searchKey: String, type: SearchType, isNewSearch: Bool = false) {
         viewModel.setSearchKey(with: searchKey)
-        viewModel.searchMovies() { [weak self] result in
+        viewModel.searchMovies(type: type, isNewSearch: isNewSearch) { [weak self] result in
             guard let self else { return }
             switch result {
             case let .success(response):
                 let movies = response.0
-                handleSearchResults(with: movies, for: type)
+                handleSearchResults(with: movies, for: type, isNewSearch: isNewSearch)
                 if type == .TableView {
                     totalResultsForTable = response.1 ?? 0
                 } else {
@@ -102,19 +98,31 @@ class DashboardViewController: BaseViewController {
                 }
             case let .failure(error):
                 debugPrint(error.localizedDescription)
+                DispatchQueue.main.async {
+                    self.showAlert(with: "No results for this search key. Please try another one.")
+                }
             }
         }
     }
     
-    func handleSearchResults(with movies: [MovieModel], for type: SearchType) {
+    func handleSearchResults(with movies: [MovieModel], for type: SearchType, isNewSearch: Bool) {
         switch type {
         case .TableView:
-            tableModels.append(contentsOf: movies)
+            if isNewSearch {
+                tableModels = movies
+            } else {
+                tableModels.append(contentsOf: movies)
+            }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
+                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
             }
         case .CollectionView:
-            collectionModels.append(contentsOf: movies)
+            if isNewSearch {
+                collectionModels = movies
+            } else {
+                collectionModels.append(contentsOf: movies)
+            }
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
             }
@@ -148,7 +156,7 @@ class DashboardViewController: BaseViewController {
     func configureCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 5
+//        layout.minimumLineSpacing = 5
         layout.minimumInteritemSpacing = 10
         
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -202,7 +210,7 @@ extension DashboardViewController: UITableViewDataSource {
         
         if indexPath.row == tableModels.count - 1 {
             if totalResultsForTable > tableModels.count {
-                fetchMovies(with: "star", type: .TableView)
+                fetchMovies(with: searchText, type: .TableView)
             }
         }
         
@@ -221,7 +229,12 @@ extension DashboardViewController: UITableViewDelegate{
 
 //MARK: Search Bar Delegate Methods
 extension DashboardViewController: UISearchBarDelegate {
-    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if let key = searchBar.text {
+            searchText = key
+            fetchMovies(with: key, type: .TableView, isNewSearch: true)
+        }
+    }
 }
 
 //MARK: Collection View Data Source Methods
