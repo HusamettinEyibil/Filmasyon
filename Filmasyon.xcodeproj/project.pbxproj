@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3470460C2A67E30700F536E0 /* MovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470460B2A67E30700F536E0 /* MovieCollectionViewCell.swift */; };
 		34A5ED6F2A61ACB0006F6080 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A5ED6E2A61ACB0006F6080 /* AppDelegate.swift */; };
 		34A5ED732A61ACB0006F6080 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A5ED722A61ACB0006F6080 /* ViewController.swift */; };
 		34A5ED782A61ACB1006F6080 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34A5ED772A61ACB1006F6080 /* Assets.xcassets */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3470460B2A67E30700F536E0 /* MovieCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewCell.swift; sourceTree = "<group>"; };
 		34A5ED6B2A61ACB0006F6080 /* Filmasyon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Filmasyon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34A5ED6E2A61ACB0006F6080 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		34A5ED722A61ACB0006F6080 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 			isa = PBXGroup;
 			children = (
 				34A5ED942A61B76A006F6080 /* MovieTableViewCell.swift */,
+				3470460B2A67E30700F536E0 /* MovieCollectionViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -261,6 +264,7 @@
 				34A5EDAC2A62CCA4006F6080 /* BaseViewController.swift in Sources */,
 				34A5ED8E2A61B1D5006F6080 /* DashboardBuilder.swift in Sources */,
 				34A5ED842A61AE40006F6080 /* AppContainer.swift in Sources */,
+				3470460C2A67E30700F536E0 /* MovieCollectionViewCell.swift in Sources */,
 				34A5ED6F2A61ACB0006F6080 /* AppDelegate.swift in Sources */,
 				34A5EDA12A62175C006F6080 /* SessionManager.swift in Sources */,
 				34A5ED9F2A62013E006F6080 /* MovieModel.swift in Sources */,

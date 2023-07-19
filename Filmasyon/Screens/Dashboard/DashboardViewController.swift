@@ -17,7 +17,9 @@ protocol DashboardViewModelProtocol: AnyObject {
 class DashboardViewController: BaseViewController {
     
     private var searchBar = UISearchBar()
+    private var tableViewContainer = UIView()
     private var tableView = UITableView()
+    private var collectionView: UICollectionView!
     
     private var models: [MovieModel] = []
     private var totalResults = 0
@@ -35,6 +37,7 @@ class DashboardViewController: BaseViewController {
         fetchMovies()
         configureTableView()
         configureSearchBar()
+        configureCollectionView()
     }
     
     override func viewDidLayoutSubviews() {
@@ -48,12 +51,25 @@ class DashboardViewController: BaseViewController {
         searchBar.rightAnchor.constraint(equalTo: safeArea.rightAnchor, constant: -20).isActive = true
         searchBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        view.addSubview(tableView)
-        tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 10).isActive = true
-        tableView.leftAnchor.constraint(equalTo: safeArea.leftAnchor, constant: 20).isActive = true
-        tableView.rightAnchor.constraint(equalTo: safeArea.rightAnchor, constant: -20).isActive = true
-        tableView.heightAnchor.constraint(equalToConstant: 400).isActive = true
+        view.addSubview(tableViewContainer)
+        tableViewContainer.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 10).isActive = true
+        tableViewContainer.leftAnchor.constraint(equalTo: safeArea.leftAnchor, constant: 20).isActive = true
+        tableViewContainer.rightAnchor.constraint(equalTo: safeArea.rightAnchor, constant: -20).isActive = true
+        
+        tableViewContainer.addSubview(tableView)
+        tableView.topAnchor.constraint(equalTo: tableViewContainer.topAnchor, constant: 4).isActive = true
+        tableView.leftAnchor.constraint(equalTo: tableViewContainer.leftAnchor, constant: 4).isActive = true
+        tableView.rightAnchor.constraint(equalTo: tableViewContainer.rightAnchor, constant: -4).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: tableViewContainer.bottomAnchor, constant: -6).isActive = true
+        
         tableView.reloadData()
+        
+        view.addSubview(collectionView)
+        collectionView.topAnchor.constraint(equalTo: tableViewContainer.bottomAnchor, constant: 10).isActive = true
+        collectionView.leftAnchor.constraint(equalTo: safeArea.leftAnchor, constant: 20).isActive = true
+        collectionView.rightAnchor.constraint(equalTo: safeArea.rightAnchor, constant: -20).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor).isActive = true
+        collectionView.heightAnchor.constraint(equalToConstant: 220).isActive = true
     }
     
 //    override func viewDidAppear(_ animated: Bool) {
@@ -83,12 +99,17 @@ class DashboardViewController: BaseViewController {
     }
     
     private func configureTableView() {
+        tableViewContainer.translatesAutoresizingMaskIntoConstraints = false
+        tableViewContainer.corner(5)
+        tableViewContainer.backgroundColor = UIColor(red: 0.93, green: 0.8, blue: 0.93, alpha: 1)
+        
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.corner(5)
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .clear
         tableView.estimatedRowHeight = tableView.rowHeight
         tableView.rowHeight = UITableView.automaticDimension
         tableView.register(MovieTableViewCell.self, forCellReuseIdentifier: MovieTableViewCell.identifier)
@@ -99,6 +120,22 @@ class DashboardViewController: BaseViewController {
         searchBar.delegate = self
         searchBar.searchBarStyle = .minimal
         searchBar.returnKeyType = .search
+    }
+    
+    func configureCollectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 5
+        layout.minimumInteritemSpacing = 10
+        
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.backgroundColor = .white
+        collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
     }
     
     func endEditing() {
@@ -162,4 +199,45 @@ extension DashboardViewController: UITableViewDelegate{
 //MARK: Search Bar Delegate Methods
 extension DashboardViewController: UISearchBarDelegate {
     
+}
+
+//MARK: Collection View Data Source Methods
+extension DashboardViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return models.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as? MovieCollectionViewCell else {
+            preconditionFailure("Cell identifier could not be found.")
+        }
+        let movie = models[indexPath.row]
+        cell.configureCell(with: movie)
+        if let imageUrl = movie.posterUrl, let id = movie.imdbId {
+            viewModel.downloadImage(with: imageUrl, imdbId: id) { data, error in
+                if let data {
+                    DispatchQueue.main.async {
+                        cell.setImage(with: data)
+                    }
+                } else if let error {
+                    debugPrint(error.localizedDescription)
+                }
+            }
+        }
+        return cell
+    }
+}
+
+//MARK: Collection View Delegate Methods
+extension DashboardViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+    }
+}
+
+//MARK: Collection View Flow Layout Methods
+extension DashboardViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 170, height: collectionView.frame.size.height)
+    }
 }

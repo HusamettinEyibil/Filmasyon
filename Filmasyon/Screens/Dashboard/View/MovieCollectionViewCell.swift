@@ -1,20 +1,19 @@
 //
-//  MovieTableViewCell.swift
+//  MovieCollectionViewCell.swift
 //  Filmasyon
 //
-//  Created by Hüsamettin  Eyibil on 14.07.2023.
+//  Created by Hüsamettin  Eyibil on 19.07.2023.
 //
 
 import UIKit
 
-class MovieTableViewCell: UITableViewCell {
-    
-    static let identifier = "MovieTableViewCell"
+class MovieCollectionViewCell: UICollectionViewCell {
+    static let identifier = "MovieCollectionViewCell"
     
     private let containerView: UIView = {
         let view = UIView()
         view.corner(3)
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.8, green: 0.9, blue: 0.93, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -29,7 +28,7 @@ class MovieTableViewCell: UITableViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
         label.textColor = .black
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -38,7 +37,7 @@ class MovieTableViewCell: UITableViewCell {
     
     private let yearLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -53,34 +52,31 @@ class MovieTableViewCell: UITableViewCell {
         super.layoutSubviews()
         
         contentView.addSubview(containerView)
-        containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 7).isActive = true
-        containerView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10).isActive = true
-        containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -7).isActive = true
-        containerView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10).isActive = true
+        containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 3).isActive = true
+        containerView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 3).isActive = true
+        containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3).isActive = true
+        containerView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -3).isActive = true
         
         containerView.addSubview(posterImageView)
         posterImageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
         posterImageView.heightAnchor.constraint(equalToConstant: 90).isActive = true
-        posterImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        posterImageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
         posterImageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10).isActive = true
-        posterImageView.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 10).isActive = true
-        posterImageView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10).isActive = true
         
         containerView.addSubview(titleLabel)
-        titleLabel.topAnchor.constraint(equalTo: posterImageView.topAnchor).isActive = true
-        titleLabel.leftAnchor.constraint(equalTo: posterImageView.rightAnchor, constant: 10).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 10).isActive = true
+        titleLabel.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 10).isActive = true
         titleLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -10).isActive = true
         
         containerView.addSubview(yearLabel)
         yearLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10).isActive = true
-        yearLabel.leftAnchor.constraint(equalTo: titleLabel.leftAnchor).isActive = true
-        yearLabel.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor).isActive = true
-        yearLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -10).isActive = true
+        yearLabel.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 10).isActive = true
+        yearLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10).isActive = true
+        yearLabel.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor, constant: -10).isActive = true
     }
     
     func configureCell(with movie: MovieModel) {
-        selectionStyle = .none
-        backgroundColor = .clear
+        backgroundColor = .white
         titleLabel.text = movie.title
         yearLabel.text = "Release Date: \(movie.year ?? "")"
     }
@@ -88,5 +84,4 @@ class MovieTableViewCell: UITableViewCell {
     func setImage(with data: Data) {
         posterImageView.image = UIImage(data: data)
     }
-
 }
