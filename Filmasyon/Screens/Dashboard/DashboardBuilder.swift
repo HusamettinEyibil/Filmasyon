@@ -10,7 +10,7 @@ import UIKit
 class DashboardBuilder {
     static func build() -> DashboardViewController {
         let viewController = DashboardViewController()
-        viewController.viewModel = DashboardViewModel()
+        viewController.viewModel = DashboardViewModel(manager: appContainer.networkManager)
         return viewController
     }
 }

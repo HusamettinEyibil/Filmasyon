@@ -11,4 +11,6 @@ let appContainer = AppContainer()
 
 class AppContainer {
     let router = AppRouter()
+    let networkManager = NetworkManager()
+    let sessionManager = SessionManager()
 }
